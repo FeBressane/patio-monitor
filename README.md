@@ -124,7 +124,12 @@ Limites do F1, que entram no PDF: 60 min de CPU por dia, 1 GB de RAM e sem Alway
 3. Crie o service principal do deploy com acesso só ao resource group, igual ao `GUIA_AZURE` da GS Cloud:
    `az ad sp create-for-rbac --name sp-patio-monitor --role contributor --scopes /subscriptions/<id>/resourceGroups/rg-patio-monitor --sdk-auth`
 4. Em GitHub Secrets, cadastre `AZURE_CREDENTIALS` (o JSON do passo 3), `AZURE_WEBAPP_NAME`, `AZURE_RESOURCE_GROUP`, `INGEST_API_KEY`, `METRICS_TOKEN` e `ASSISTENTE_URL`. Crie também o environment `producao`.
-5. Todo push na `main` passa por testes, Gitleaks, Semgrep, Trivy (código, IaC e imagens) e só depois faz o deploy automático.
+5. Crie a variável de repositório `DEPLOY_HABILITADO=true`. Sem ela, o job de deploy fica desligado.
+6. Todo push na `main` passa por testes, Gitleaks, Semgrep, Trivy (código, IaC e imagens) e só depois faz o deploy automático.
+
+**Região:** `eastus2`. A Azure permite só um plano F1 Linux por região e por assinatura, e o de `brazilsouth` já roda a GS AgroSatélite. A política do Azure for Students só libera brazilsouth, chilecentral, canadacentral, eastus2 e centralus.
+
+**Problema de certificado (x509 / `CERTIFICATE_VERIFY_FAILED`):** o "Web/Mail Shield" do Norton intercepta o HTTPS, e o Azure CLI e o Terraform não confiam na raiz dele. A solução usada, sem desligar o antivírus, foi exportar o certificado "Norton Web/Mail Shield Root" do repositório do Windows, juntá-lo ao `cacert.pem` do Azure CLI e apontar `REQUESTS_CA_BUNDLE` para esse arquivo. Os recursos foram criados com `az` CLI (os comandos equivalem ao `main.tf`). No Git Bash, use `MSYS_NO_PATHCONV=1` antes do `--scopes /subscriptions/...`.
 
 **Porta de administração:** o App Service não tem SSH aberto. O painel Kudu/SCM e o FTP ficam sem login por senha (FTP desligado), então só entra quem tem acesso Entra ID com RBAC.
 

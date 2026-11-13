@@ -4,9 +4,11 @@ variable "subscription_id" {
 }
 
 variable "regiao" {
-  description = "Mesma região usada na GS Cloud do AgroSatélite."
+  # A Azure permite só 1 plano F1 Linux por região, e o de brazilsouth já é da GS AgroSatélite.
+  # A política do Azure for Students libera: brazilsouth, chilecentral, canadacentral, eastus2, centralus.
+  description = "Região do App Service F1. eastus2 porque o F1 Linux de brazilsouth já está em uso."
   type        = string
-  default     = "brazilsouth"
+  default     = "eastus2"
 }
 
 variable "nome_app" {
