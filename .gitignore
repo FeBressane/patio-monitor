@@ -26,3 +26,7 @@ rpa/quarentena/
 
 # token do Prometheus para ler o /metrics do MVP publicado
 devops-cloud/monitoramento/metrics_token
+
+# Airflow local (Big Data)
+bigdata/airflow/.env
+bigdata/airflow/gtfs/

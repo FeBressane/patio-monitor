@@ -1,0 +1,33 @@
+# Airflow local para o DAG patio_coleta (modo standalone: 1 container).
+#   cd bigdata/airflow
+#   cp .env.example .env        # coloque o token da SPTrans (o .env fica fora do Git)
+#   docker compose up -d        # interface em http://localhost:8080
+#   docker compose exec airflow airflow users create -u admin -p <senha> -r Admin -f Admin -l Patio -e admin@example.com
+#
+# As Variables do DAG vêm de variáveis de ambiente AIRFLOW_VAR_* (lidas do .env),
+# então o token nunca passa pelo código, pelo banco do Airflow nem pelo repositório.
+services:
+  airflow:
+    image: apache/airflow:2.10.5-python3.12
+    command: standalone
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"   # só nesta máquina
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: America/Sao_Paulo
+      AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE: America/Sao_Paulo
+      AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: "30"
+      # Banco do Airflow num volume: o histórico de execuções (visão Grid do relatório) sobrevive a restart.
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/estado/airflow.db
+      AIRFLOW_VAR_SPTRANS_TOKEN: ${SPTRANS_TOKEN:?defina SPTRANS_TOKEN no .env}
+      AIRFLOW_VAR_GTFS_ZIP_URL: /opt/airflow/gtfs/gtfs.zip
+      AIRFLOW_VAR_PATIO_CHEGADA_DIR: /opt/airflow/chegada
+    volumes:
+      - ../dags:/opt/airflow/dags:ro
+      - ../chegada:/opt/airflow/chegada        # bigdata/chegada/ (fora do Git)
+      - ./gtfs:/opt/airflow/gtfs:ro            # coloque aqui o gtfs.zip baixado do portal da SPTrans
+      - airflow-estado:/opt/airflow/estado
+
+volumes:
+  airflow-estado:
