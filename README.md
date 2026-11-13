@@ -106,6 +106,8 @@ Nenhum token ou dado pessoal real vai para o repositório. A pasta `bigdata/amos
 
 ## Deploy (DevOps) · custo zero
 
+**MVP publicado:** https://patio-monitor-gs-97688.azurewebsites.net · Swagger em [`/docs`](https://patio-monitor-gs-97688.azurewebsites.net/docs) · [`/health`](https://patio-monitor-gs-97688.azurewebsites.net/health)
+
 Mesmo caminho da GS Cloud do AgroSatélite (semestre passado): **Azure App Service no plano F1 (Free)**, agora criado por Terraform e publicado por um pipeline DevSecOps.
 
 | Recurso | Custo |
@@ -127,7 +129,7 @@ Limites do F1, que entram no PDF: 60 min de CPU por dia, 1 GB de RAM e sem Alway
 5. Crie a variável de repositório `DEPLOY_HABILITADO=true`. Sem ela, o job de deploy fica desligado.
 6. Todo push na `main` passa por testes, Gitleaks, Semgrep, Trivy (código, IaC e imagens) e só depois faz o deploy automático.
 
-**Região:** `eastus2`. A Azure permite só um plano F1 Linux por região e por assinatura, e o de `brazilsouth` já roda a GS AgroSatélite. A política do Azure for Students só libera brazilsouth, chilecentral, canadacentral, eastus2 e centralus.
+**Região:** `brazilsouth`. Atenção: a Azure permite só um plano F1 Linux por região e por assinatura. Além disso, a política do Azure for Students só libera brazilsouth, chilecentral, canadacentral, eastus2 e centralus.
 
 **Problema de certificado (x509 / `CERTIFICATE_VERIFY_FAILED`):** o "Web/Mail Shield" do Norton intercepta o HTTPS, e o Azure CLI e o Terraform não confiam na raiz dele. A solução usada, sem desligar o antivírus, foi exportar o certificado "Norton Web/Mail Shield Root" do repositório do Windows, juntá-lo ao `cacert.pem` do Azure CLI e apontar `REQUESTS_CA_BUNDLE` para esse arquivo. Os recursos foram criados com `az` CLI (os comandos equivalem ao `main.tf`). No Git Bash, use `MSYS_NO_PATHCONV=1` antes do `--scopes /subscriptions/...`.
 
