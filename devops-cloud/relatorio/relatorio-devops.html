@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Deploy Blindado do Pátio Monitor</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+  :root { --tinta:#1b1f24; --suave:#57606a; --linha:#d0d7de; --fundo:#f6f8fa; --acento:#0b5cad; --ok:#1a7f37; --erro:#cf222e; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: var(--tinta); font-size: 10.5pt; line-height: 1.45; margin: 0; background:#fff; }
+  a { color: var(--acento); }
+  h1 { font-size: 17pt; margin: 0 0 6px; }
+  h2 { font-size: 13.5pt; margin: 22px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--acento); break-after: avoid; }
+  h3 { font-size: 11pt; margin: 14px 0 6px; break-after: avoid; }
+  p { margin: 6px 0; }
+  ul { margin: 6px 0 6px 18px; padding: 0; }
+  li { margin: 2px 0; }
+  code { font-family: Consolas, monospace; font-size: 9pt; background: var(--fundo); padding: 1px 4px; border-radius: 3px; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 9.5pt; break-inside: avoid; }
+  th, td { border: 1px solid var(--linha); padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: var(--fundo); }
+  .num { text-align: right; white-space: nowrap; }
+  .capa { height: 255mm; display: flex; flex-direction: column; justify-content: space-between; text-align: center; break-after: page; }
+  .capa .topo { color: var(--suave); font-size: 11pt; }
+  .capa .produto { font-size: 34pt; font-weight: 700; letter-spacing: 1px; margin-top: 40mm; }
+  .capa .slogan { font-size: 13pt; color: var(--suave); margin-top: 4px; }
+  .capa .entrega { margin-top: 18mm; font-size: 12pt; }
+  .capa .entrega b { font-size: 15pt; }
+  .capa .integrantes { font-size: 11pt; line-height: 1.7; }
+  .capa .links { font-size: 10pt; }
+  .print { border: 2px dashed var(--suave); background: var(--fundo); color: var(--suave); padding: 22px 12px; text-align: center; margin: 8px 0; font-size: 9.5pt; break-inside: avoid; }
+  .legenda { font-size: 9pt; color: var(--suave); text-align: center; margin-top: 2px; }
+  .ok { color: var(--ok); font-weight: 600; } .erro { color: var(--erro); font-weight: 600; }
+  .caixa { background: var(--fundo); border-left: 4px solid var(--acento); padding: 8px 10px; margin: 8px 0; break-inside: avoid; }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; }
+  .quebra { break-before: page; }
+</style>
+</head>
+<body>
+
+<!-- ===================== CAPA (padrão da equipe) ===================== -->
+<section class="capa">
+  <div class="topo">FIAP · Engenharia de Software · 4º ano<br>Global Solution 2026.2 · Desafio CitizenTech</div>
+  <div>
+    <div class="produto">PÁTIO MONITOR</div>
+    <div class="slogan">Visão única do pátio para terminais e garagens de ônibus</div>
+    <div class="entrega">Secure DevOps Tools &amp; Cloud Computing<br><b>Deploy Blindado do Pátio Monitor</b><br>
+      Professor: Gabriel Henrique Boyczuk Arcanjo<br>Turma: 4ESPV</div>
+  </div>
+  <div class="integrantes"><b>Integrantes</b><br>
+    Felipe Bressane · RM 97688<br>Gabriel Teixeira · RM 551570<br>Camila do Prado · RM 98316</div>
+  <div class="links">
+    Repositório: <a href="https://github.com/FeBressane/patio-monitor">github.com/FeBressane/patio-monitor</a><br>
+    MVP: <a href="https://patio-monitor-gs-97688.azurewebsites.net">patio-monitor-gs-97688.azurewebsites.net</a><br><br>
+    São Paulo, novembro de 2026</div>
+</section>
+
+<!-- ===================== 1. FICHA ===================== -->
+<h2>1. Ficha Técnica do MVP</h2>
+<table>
+  <tr><th style="width:28%">Campo</th><th>Pátio Monitor</th></tr>
+  <tr><td>Cidadão e território</td><td>O passageiro que espera na plataforma e o controlador de terminais e garagens de ônibus em São Paulo. O Terminal Pirituba é o cenário de referência.</td></tr>
+  <tr><td>Problema</td><td>Escala, portaria e rastreamento não concordam sobre onde está cada ônibus, e o controlador decide sem saber se o veículo está fora, manobrando ou foi trocado.</td></tr>
+  <tr><td>Proposta de valor</td><td>Uma visão única do pátio que cruza o previsto com o registrado e aponta pendências enquanto ainda dá tempo de agir.</td></tr>
+  <tr><td>Arquitetura</td><td>Front web, API FastAPI, pipeline de dados (Airflow → Databricks), assistente de IA com RAG, detector de visão, robô de conciliação (RPA) e robô físico na maquete, publicados por CI/CD no Azure App Service.</td></tr>
+  <tr><td>Fontes de dados</td><td>SPTrans Olho Vivo, GTFS da SPTrans, Open-Meteo e portaria simulada em CSV (regra de geração documentada).</td></tr>
+  <tr><td>Indicadores de impacto</td><td>Porcentagem de partidas no horário, tempo para localizar um veículo, saídas sem confirmação por dia e tempo médio de permanência.</td></tr>
+  <tr><td>ODS</td><td>ODS 11 (meta 11.2) e ODS 9.</td></tr>
+  <tr><td>URL do MVP</td><td><a href="https://patio-monitor-gs-97688.azurewebsites.net">https://patio-monitor-gs-97688.azurewebsites.net</a> · Swagger em <a href="https://patio-monitor-gs-97688.azurewebsites.net/docs">/docs</a></td></tr>
+</table>
+<p>A mesma ficha abre o <a href="https://github.com/FeBressane/patio-monitor#readme">README do repositório</a>.</p>
+
+<!-- ===================== 2. ARQUITETURA ===================== -->
+<h2>2. Diagrama da arquitetura</h2>
+<svg viewBox="0 0 720 360" width="100%" role="img" aria-label="Arquitetura do Pátio Monitor">
+  <defs><marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#57606a"/></marker></defs>
+  <style>.b{fill:#fff;stroke:#57606a;stroke-width:1.2}.az{fill:#eaf2fb;stroke:#0b5cad;stroke-width:1.4}.gh{fill:#f6f8fa;stroke:#57606a;stroke-dasharray:4 3}.t{font-size:11px;fill:#1b1f24}.p{font-size:9.5px;fill:#57606a}.l{stroke:#57606a;stroke-width:1.2;fill:none;marker-end:url(#s)}.tt{font-size:11px;font-weight:600;fill:#0b5cad}</style>
+  <!-- GitHub -->
+  <rect class="gh" x="10" y="10" width="220" height="150" rx="8"/>
+  <text class="tt" x="20" y="28" style="fill:#1b1f24">GitHub (repositório público)</text>
+  <rect class="b" x="22" y="40" width="196" height="46" rx="6"/>
+  <text class="t" x="32" y="58">GitHub Actions (CI/CD)</text>
+  <text class="p" x="32" y="74">testes · Gitleaks · Semgrep · Trivy</text>
+  <rect class="b" x="22" y="98" width="196" height="46" rx="6"/>
+  <text class="t" x="32" y="116">GitHub Secrets</text>
+  <text class="p" x="32" y="132">AZURE_CREDENTIALS, chaves da API</text>
+  <!-- Azure -->
+  <rect class="az" x="270" y="10" width="300" height="200" rx="8"/>
+  <text class="tt" x="280" y="28">Azure · rg-patio-monitor · Brazil South</text>
+  <rect class="b" x="285" y="40" width="270" height="155" rx="6"/>
+  <text class="t" x="295" y="58">App Service Plan F1 (Linux, US$ 0)</text>
+  <rect class="b" x="300" y="68" width="240" height="115" rx="6"/>
+  <text class="t" x="310" y="86">Web App patio-monitor-gs-97688</text>
+  <text class="p" x="310" y="104">HTTPS only · TLS 1.2 · FTP desligado</text>
+  <text class="p" x="310" y="120">API FastAPI (uvicorn) + front estático</text>
+  <text class="p" x="310" y="136">SQLite em /home/data (persistente)</text>
+  <text class="p" x="310" y="152">export da Ouro (CSV, sem motorista)</text>
+  <text class="p" x="310" y="168">/metrics protegido por token</text>
+  <!-- deploy arrow -->
+  <path class="l" d="M218,63 L300,100"/>
+  <text class="p" x="20" y="178">deploy → Azure (service principal com escopo só no RG)</text>
+  <!-- users -->
+  <rect class="b" x="600" y="40" width="110" height="40" rx="6"/>
+  <text class="t" x="612" y="58">Controlador</text><text class="p" x="612" y="72">navegador (HTTPS)</text>
+  <path class="l" d="M600,62 L541,95"/>
+  <!-- producers -->
+  <rect class="b" x="600" y="100" width="110" height="78" rx="6"/>
+  <text class="t" x="612" y="118">Produtores</text>
+  <text class="p" x="612" y="134">robô Maker Lab</text><text class="p" x="612" y="148">câmera YOLO</text><text class="p" x="612" y="162">robô de RPA</text>
+  <path class="l" d="M600,140 L541,135"/>
+  <text class="p" x="555" y="196">POST + X-API-Key</text>
+  <!-- local -->
+  <rect class="gh" x="10" y="200" width="250" height="150" rx="8"/>
+  <text class="tt" x="20" y="218" style="fill:#1b1f24">Máquina da equipe (Docker)</text>
+  <rect class="b" x="140" y="230" width="110" height="46" rx="6"/><text class="t" x="150" y="250">Prometheus</text><text class="p" x="150" y="266">alertas p95/5xx</text>
+  <rect class="b" x="22" y="230" width="110" height="46" rx="6"/><text class="t" x="32" y="250">Grafana</text><text class="p" x="32" y="266">4 sinais de ouro</text>
+  <path class="l" d="M140,253 L133,253"/>
+  <rect class="b" x="22" y="290" width="228" height="46" rx="6"/><text class="t" x="32" y="308">Airflow (coleta horária)</text><text class="p" x="32" y="324">Olho Vivo · GTFS · Open-Meteo</text>
+  <path class="l" d="M195,230 L330,184"/>
+  <text class="p" x="110" y="194">scrape /metrics (Bearer token)</text>
+  <!-- databricks -->
+  <rect class="b" x="300" y="250" width="250" height="60" rx="6"/>
+  <text class="t" x="310" y="270">Databricks Free</text><text class="p" x="310" y="286">Bronze → Prata → Ouro (SHA-256 do motorista)</text>
+  <path class="l" d="M250,313 L300,290"/>
+  <path class="l" d="M425,250 L425,184"/>
+  <text class="p" x="430" y="225">export CSV via Git</text>
+</svg>
+<p class="legenda">Figura 1. O deploy chega à Azure só pelo pipeline. Usuários e produtores acessam por HTTPS. A observabilidade roda localmente e lê o MVP publicado.</p>
+
+<!-- ===================== 3. CONTAINERS ===================== -->
+<h2>3. Containers (Docker)</h2>
+<ul>
+  <li><a href="https://github.com/FeBressane/patio-monitor/blob/main/api/Dockerfile"><code>api/Dockerfile</code></a>: <b>multi-stage</b>. O 1º estágio instala as dependências num venv, e a imagem final <code>python:3.12-slim</code> leva só o venv e o código. Roda como <b>usuário não root</b> (<code>uid 10001</code>), com <code>HEALTHCHECK</code> em <code>/health</code>.</li>
+  <li><a href="https://github.com/FeBressane/patio-monitor/blob/main/front/Dockerfile"><code>front/Dockerfile</code></a>: front servido por <b>nginx sem root</b>, com proxy de <code>/api</code> para a API.</li>
+  <li><a href="https://github.com/FeBressane/patio-monitor/blob/main/docker-compose.yml"><code>docker-compose.yml</code></a>: sobe <b>front + API + Postgres</b>. A API só escuta em <code>127.0.0.1</code>, e o acesso público passa pelo front. O profile <code>monitoramento</code> sobe Prometheus e Grafana.</li>
+  <li><b>Nenhum segredo dentro da imagem.</b> Senhas e chaves vêm de variáveis de ambiente (<code>.env</code> local, fora do Git, ou App Settings na nuvem).</li>
+  <li>O Trivy varre as duas imagens no pipeline e barra qualquer CVE <b>HIGH/CRITICAL</b> com correção disponível. As imagens atuais passam sem nenhuma.</li>
+</ul>
+
+<!-- ===================== 4. IAC ===================== -->
+<h2>4. Infraestrutura como código (Terraform)</h2>
+<p><a href="https://github.com/FeBressane/patio-monitor/tree/main/devops-cloud/terraform"><code>devops-cloud/terraform/</code></a> descreve o ambiente inteiro: resource group, <b>App Service Plan F1</b> (Linux) e o <b>Linux Web App</b> Python 3.12.</p>
+<table>
+  <tr><th style="width:38%">Exigência de segurança</th><th>Como o Pátio Monitor atende</th></tr>
+  <tr><td>Expor só 80/443</td><td>O App Service só recebe tráfego HTTP/HTTPS, e <code>https_only = true</code> redireciona o HTTP para HTTPS. TLS mínimo 1.2, HTTP/2 ligado.</td></tr>
+  <tr><td>Porta 22 nunca aberta para 0.0.0.0/0</td><td>Não existe SSH público. O console Kudu/SCM só aceita login Entra ID com RBAC, porque a autenticação básica (usuário e senha) de SCM e FTP está <b>desligada</b> e o FTP/FTPS está <code>Disabled</code>.</td></tr>
+  <tr><td>Segredos fora do código</td><td>O Terraform só grava configurações não secretas. <code>INGEST_API_KEY</code>, <code>METRICS_TOKEN</code> e <code>ASSISTENTE_URL</code> são gravadas pelo pipeline a partir do GitHub Secrets e ficam em <code>ignore_changes</code>, para não passarem pelo state.</td></tr>
+  <tr><td><code>.tfvars</code> fora do repositório</td><td>O <code>.gitignore</code> bloqueia <code>*.tfvars</code> e <code>*.tfstate</code>. No repositório só existe o <code>terraform.tfvars.example</code>, sem valores reais.</td></tr>
+  <tr><td>State</td><td>O state é local e fica fora do Git. Um backend remoto num Storage Account consumiria crédito da assinatura, e a meta do projeto é custo zero. Para uma equipe maior, o próximo passo é o backend <code>azurerm</code> com lock.</td></tr>
+</table>
+<div class="caixa"><b>Por que App Service e não uma VM.</b> A VM exigiria abrir e manter portas, SO e patches, e custaria crédito (uma B1s fica ligada 24 h até 26/11). O App Service F1 é PaaS: a Azure cuida do SO e do runtime, o custo é US$ 0, e a superfície de ataque é menor, porque não há porta 22 para proteger. A mesma API roda em container no <code>docker compose</code>, o que demonstra a parte de containers.</div>
+<h3>Problemas reais encontrados no provisionamento</h3>
+<ul>
+  <li><b>x509 / <code>CERTIFICATE_VERIFY_FAILED</code>:</b> o "Web/Mail Shield" do antivírus Norton intercepta HTTPS com uma CA própria. O Azure CLI (Python) e o Terraform (Go) não confiam nela. A correção foi juntar a raiz do Norton ao <code>cacert.pem</code> do Azure CLI (<code>REQUESTS_CA_BUNDLE</code>) e desligar a inspeção HTTPS durante o <code>terraform apply</code>.</li>
+  <li><b>Política de regiões do Azure for Students:</b> só libera brazilsouth, chilecentral, canadacentral, eastus2 e centralus (<code>RequestDisallowedByAzure</code> em eastus).</li>
+  <li><b>Limite de 1 plano F1 Linux por região:</b> o F1 de Brazil South estava ocupado por um projeto antigo, que foi removido para liberar a região.</li>
+</ul>
+<div class="print">[PRINT: <code>terraform plan</code> mostrando "No changes" depois do import, ou o <code>terraform apply</code> concluído]</div>
+
+<!-- ===================== 5. PIPELINE ===================== -->
+<h2 class="quebra">5. Pipeline CI/CD DevSecOps (GitHub Actions)</h2>
+<p>Arquivo: <a href="https://github.com/FeBressane/patio-monitor/blob/main/.github/workflows/ci-cd.yml"><code>.github/workflows/ci-cd.yml</code></a>. Roda a cada push em qualquer branch e em pull requests. O deploy só acontece na <code>main</code>.</p>
+<table>
+  <tr><th>Job</th><th>O que faz</th><th>Barra quando</th></tr>
+  <tr><td>testes</td><td><code>pytest</code> da API (12 testes: health, ingestão com chave, robô movendo ônibus, conciliação…)</td><td>algum teste falha</td></tr>
+  <tr><td>Gitleaks</td><td>Varre <b>todo o histórico</b> do Git atrás de segredos</td><td>encontra token/chave</td></tr>
+  <tr><td>Semgrep (SAST)</td><td>Regras <code>p/python</code>, <code>p/dockerfile</code> e <code>p/terraform</code></td><td>qualquer achado</td></tr>
+  <tr><td>Trivy (IaC e deps)</td><td>Vulnerabilidades, misconfig e segredos no código e no Terraform</td><td>HIGH/CRITICAL corrigível</td></tr>
+  <tr><td>Build + Trivy das imagens</td><td>Build da API e do front e scan de cada imagem</td><td>HIGH/CRITICAL corrigível</td></tr>
+  <tr><td>Deploy</td><td>Login na Azure com service principal, gravação dos segredos nas App Settings, deploy e <b>health check</b> em <code>/health</code></td><td>o app não responde em 5 min</td></tr>
+</table>
+<ul>
+  <li><b>Segredos:</b> ficam em GitHub Secrets (<code>AZURE_CREDENTIALS</code>, <code>AZURE_WEBAPP_NAME</code>, <code>AZURE_RESOURCE_GROUP</code>, <code>INGEST_API_KEY</code>, <code>METRICS_TOKEN</code>) e no environment <code>producao</code>.</li>
+  <li><b>Menor privilégio:</b> o service principal <code>sp-patio-monitor-github</code> é <i>Contributor</i> <b>só no resource group</b> <code>rg-patio-monitor</code>, não na assinatura.</li>
+  <li>O deploy só roda depois que testes, Gitleaks, Semgrep e Trivy passam (<code>needs: build</code>).</li>
+</ul>
+<h3>Execução barrada e execução corrigida</h3>
+<p>No branch <code>demo/pipeline-barrado</code>, um token <b>falso</b> foi commitado de propósito em <code>api/app/sptrans_cliente.py</code>.</p>
+<table>
+  <tr><th>Execução</th><th>Resultado</th><th>Detalhe</th></tr>
+  <tr><td><a href="https://github.com/FeBressane/patio-monitor/actions/runs/43524648708">#43524648708</a></td><td class="erro">Barrada</td><td>O Gitleaks encontrou o token, e o build, o scan das imagens e o deploy foram <b>pulados</b>.</td></tr>
+  <tr><td><a href="https://github.com/FeBressane/patio-monitor/actions/runs/43524768351">#43524768351</a></td><td class="ok">Corrigida</td><td>O token passou a vir de variável de ambiente (<code>os.getenv</code>), e o commit foi reescrito para o valor não ficar no histórico. Todos os jobs passaram.</td></tr>
+</table>
+<div class="print">[PRINT: execução #43524648708 com o job Gitleaks em vermelho e o log mostrando o achado]</div>
+<div class="print">[PRINT: execução #43524768351 com todos os jobs em verde]</div>
+<div class="print">[PRINT: execução da main com o job "Deploy no Azure App Service" e o health check em verde]</div>
+
+<!-- ===================== 6. OBSERVABILIDADE ===================== -->
+<h2>6. Observabilidade (Prometheus + Grafana)</h2>
+<p>A API expõe <code>/metrics</code> no formato Prometheus (<code>prometheus-fastapi-instrumentator</code>). Na nuvem esse endpoint exige token: sem ele a resposta é <b>401</b>. O Prometheus roda localmente pelo <code>docker compose --profile monitoramento</code> e lê o MVP publicado por HTTPS com <code>Bearer</code> (job <code>patio-azure</code>, a cada 30 s, para não gastar a cota de CPU do F1).</p>
+<table>
+  <tr><th>Sinal de ouro</th><th>Painel no Grafana</th></tr>
+  <tr><td>Latência</td><td>Latência p95 por endpoint (<code>histogram_quantile</code> sobre <code>http_request_duration_seconds</code>)</td></tr>
+  <tr><td>Tráfego</td><td>Requisições por segundo</td></tr>
+  <tr><td>Erros</td><td>% de respostas 4xx/5xx</td></tr>
+  <tr><td>Saturação</td><td>CPU e memória do processo da API</td></tr>
+</table>
+<p><b>Alertas</b> (<a href="https://github.com/FeBressane/patio-monitor/blob/main/devops-cloud/monitoramento/alertas.yml"><code>alertas.yml</code></a>):</p>
+<ul>
+  <li><code>LatenciaP95PosicoesAlta</code>: p95 de <code>/posicoes</code> acima de <b>300 ms</b> por 2 min. É assim que a promessa de baixa latência do produto é medida, em vez de ser só afirmada.</li>
+  <li><code>TaxaDeErros5xx</code>: mais de 5% de respostas 5xx.</li>
+  <li><code>ApiFora</code>: alvo sem responder por 1 min.</li>
+</ul>
+<div class="print">[PRINT: dashboard "Pátio Monitor · 4 sinais de ouro" com dados do MVP publicado]</div>
+<div class="print">[PRINT: Prometheus › Alerts com um alerta disparado (Firing)]</div>
+
+<!-- ===================== 7. RESPONSABILIDADE ===================== -->
+<h2 class="quebra">7. Modelo de responsabilidade compartilhada</h2>
+<p>O App Service é <b>PaaS</b>: a Azure assume a infraestrutura e o sistema operacional, e a equipe responde por tudo que coloca e configura em cima.</p>
+<table>
+  <tr><th style="width:30%">Camada</th><th>Azure (provedor)</th><th>Equipe Pátio Monitor</th></tr>
+  <tr><td>Datacenter, rede física, hardware</td><td>Total</td><td>—</td></tr>
+  <tr><td>SO do host, hipervisor e patches do runtime Python</td><td>Total</td><td>Escolher uma versão suportada (3.12)</td></tr>
+  <tr><td>Rede e TLS do app</td><td>Certificado <code>*.azurewebsites.net</code> e balanceador</td><td>HTTPS only, TLS 1.2, FTP desligado</td></tr>
+  <tr><td>Identidade e acesso</td><td>Entra ID e RBAC (o serviço)</td><td>Service principal com escopo só no RG, sem senha básica no SCM/FTP</td></tr>
+  <tr><td>Código e dependências</td><td>—</td><td>Total: testes, Semgrep, Trivy e Gitleaks no pipeline</td></tr>
+  <tr><td>Segredos</td><td>Guarda as App Settings cifradas</td><td>Origem no GitHub Secrets, rotação e nada no Git</td></tr>
+  <tr><td>Dados (SQLite, CSV da Ouro)</td><td>Disco persistente do <code>/home</code></td><td>Classificação, minimização e LGPD</td></tr>
+  <tr><td>Monitoramento</td><td>Métricas da plataforma</td><td>Métricas da aplicação, painel e alertas</td></tr>
+</table>
+
+<!-- ===================== 8. LGPD ===================== -->
+<h2>8. Dados pessoais (LGPD): onde ficam</h2>
+<p>O único dado pessoal do domínio é o do <b>motorista</b> (matrícula e nome). No projeto ele é <b>fictício</b>: é gerado pela portaria simulada com nomes do tipo "Motorista A".</p>
+<table>
+  <tr><th>Lugar</th><th>Dado do motorista</th></tr>
+  <tr><td>Portaria simulada (<code>bigdata/chegada/</code>, fora do Git) e camadas Bronze/Prata no Databricks</td><td>Texto (fictício)</td></tr>
+  <tr><td>Camada Ouro (<code>fato_permanencia</code>) no Databricks</td><td><b>Só hash SHA-256</b> da matrícula e do nome</td></tr>
+  <tr><td>Export CSV da Ouro, API, SQLite do App Service, Postgres do compose</td><td><b>Nenhum</b>: o export não tem as colunas, e a API ainda filtra qualquer coluna com "motorista"</td></tr>
+  <tr><td>Logs da API e do assistente</td><td>Nenhum</td></tr>
+</table>
+<p>Limite conhecido: SHA-256 sem sal de um nome pode ser revertido por dicionário. Com dados reais, o certo seria HMAC-SHA-256 com a chave num cofre (Azure Key Vault), e não um hash puro.</p>
+
+<!-- ===================== 9. CUSTO ===================== -->
+<h2>9. Estimativa de custo mensal</h2>
+<p>Preços de tabela da <a href="https://prices.azure.com/api/retail/prices">Azure Retail Prices API</a> para Brazil South, em USD, consultados em 13/11/2026. Mês = 730 h.</p>
+<table>
+  <tr><th>Recurso</th><th>Plano</th><th class="num">US$/hora</th><th class="num">US$/mês</th></tr>
+  <tr><td>App Service Plan (Linux), <b>usado no MVP</b></td><td>F1 Free</td><td class="num">0,00</td><td class="num"><b>0,00</b></td></tr>
+  <tr><td>Web App, SQLite em <code>/home</code>, certificado HTTPS</td><td>incluso no plano</td><td class="num">—</td><td class="num">0,00</td></tr>
+  <tr><td>GitHub Actions (repositório público)</td><td>gratuito</td><td class="num">—</td><td class="num">0,00</td></tr>
+  <tr><td>Prometheus + Grafana (locais)</td><td>máquina da equipe</td><td class="num">—</td><td class="num">0,00</td></tr>
+  <tr><th colspan="3">Total do MVP, ligado até a correção (~26/11)</th><th class="num">US$ 0,00</th></tr>
+  <tr><td>Cenário piloto num terminal (sem cota de CPU, com Always On)</td><td>B1 Linux</td><td class="num">0,02</td><td class="num">14,60</td></tr>
+  <tr><td>Cenário com escala automática</td><td>P0v3 Linux</td><td class="num">0,111</td><td class="num">81,03</td></tr>
+</table>
+<p>Limites do F1, assumidos conscientemente: 60 min de CPU por dia, 1 GB de RAM e sem Always On. O app dorme depois de cerca de 20 min sem acesso, e a primeira requisição demora alguns segundos. Para o pitch e a correção isso basta. Num piloto real, o B1 resolve por cerca de US$ 15/mês.</p>
+
+<!-- ===================== 10. CONCLUSÃO ===================== -->
+<h2>10. Conclusão</h2>
+<p>O Pátio Monitor está publicado numa URL pública em HTTPS, com custo zero, e só chega à nuvem por um pipeline que testa, procura segredos, faz análise estática e varre dependências e imagens antes do deploy. A execução barrada mostra o pipeline impedindo que um segredo vá para produção. O Grafana mede a latência que o produto promete, em vez de só afirmá-la.</p>
+<p><b>Links:</b> repositório <a href="https://github.com/FeBressane/patio-monitor">github.com/FeBressane/patio-monitor</a> · MVP <a href="https://patio-monitor-gs-97688.azurewebsites.net">patio-monitor-gs-97688.azurewebsites.net</a> · Swagger <a href="https://patio-monitor-gs-97688.azurewebsites.net/docs">/docs</a> · pipeline <a href="https://github.com/FeBressane/patio-monitor/actions">Actions</a></p>
+
+</body>
+</html>
