@@ -19,6 +19,8 @@ venv/
 bigdata/chegada/
 data/ouro/*.csv
 !data/ouro/fato_permanencia.exemplo.csv
+# Export da Ouro: sem nenhuma coluna de motorista (nem hash). Vai para o Git para o deploy levar ao App Service.
+!data/ouro/fato_permanencia.csv
 # rpa
 rpa/logs/*.log
 !rpa/logs/amostra.log

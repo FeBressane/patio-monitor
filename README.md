@@ -100,7 +100,7 @@ Com `DEMO=true`, a API cria 10 ônibus fictícios e alguns alertas, e move esses
 2. Depois de ter lotes de pelo menos 2 dias, gere a portaria e a escala simuladas:
    `python bigdata/scripts/gerar_portaria.py <pasta chegada> <pasta chegada>`
 3. Suba os arquivos de `chegada/` para o Volume `/Volumes/workspace/patio/chegada` e rode os notebooks `01` → `02` → `03` → `04`.
-4. Exporte o resultado final do `03_ouro` como `data/ouro/fato_permanencia.csv`. A API serve esse arquivo em `GET /permanencia`.
+4. Exporte o resultado final do `03_ouro` como `data/ouro/fato_permanencia.csv` e faça commit. O export não tem nenhuma coluna de motorista, e o deploy leva o arquivo para o App Service, que o serve em `GET /permanencia`.
 
 Nenhum token ou dado pessoal real vai para o repositório. A pasta `bigdata/amostras/` recebe só um pouco de cada fonte, sem token.
 

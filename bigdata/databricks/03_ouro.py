@@ -84,7 +84,7 @@ display(spark.sql("SELECT status_conciliacao, count(*) AS viagens FROM fato_perm
 
 # MAGIC %md
 # MAGIC ### Export para o MVP
-# MAGIC Baixe o resultado abaixo como CSV e salve em `data/ouro/fato_permanencia.csv` no repositório da VM.
+# MAGIC Baixe o resultado abaixo como CSV e salve em `data/ouro/fato_permanencia.csv` e faça commit (o deploy leva o arquivo ao App Service).
 # MAGIC A API serve esse arquivo em `GET /permanencia` (as colunas de hash do motorista não são expostas).
 
 # COMMAND ----------
