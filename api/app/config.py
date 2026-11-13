@@ -7,7 +7,7 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./patio.db")
 # Chave exigida nos POSTs de ingestão (robô, visão, RPA). Vazia = modo dev, sem exigência.
 INGEST_API_KEY = os.getenv("INGEST_API_KEY", "")
 
-# Serviço de GenAI do Gabe. Vazio = a API responde com o fallback de regras do POP simulado.
+# Serviço de GenAI. Vazio = a API responde com o fallback de regras do POP simulado.
 ASSISTENTE_URL = os.getenv("ASSISTENTE_URL", "")
 ASSISTENTE_TIMEOUT_S = float(os.getenv("ASSISTENTE_TIMEOUT_S", "20"))
 

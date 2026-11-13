@@ -1,4 +1,4 @@
-# Generative AI — Gabriel Teixeira (RM 551570)
+# Generative AI
 
 Pasta do assistente de IA (LLM local + RAG sobre o POP do pátio).
 
@@ -8,4 +8,4 @@ Pasta do assistente de IA (LLM local + RAG sobre o POP do pátio).
 Formato de entrada e saída em [`docs/contrato-api.md`](../docs/contrato-api.md#assistente-de-genai-post-assistente).
 Sem o serviço no ar, a API responde com regras do POP (`"modo": "fallback_regras"`).
 
-> Pendente: código do Gabriel.
+> Pendente: código desta disciplina.

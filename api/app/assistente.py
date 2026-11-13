@@ -1,7 +1,7 @@
 """Ponte para o assistente de GenAI.
 
 Se ASSISTENTE_URL estiver configurada, a pergunta (com o estado real do veículo, como no modo
-"agente" do plano) vai para o serviço de LLM local + RAG do Gabe. Senão, ou se ele cair, a API
+"agente" do plano) vai para o serviço de LLM local + RAG. Senão, ou se ele cair, a API
 responde com regras simples tiradas do POP SIMULADO, para a tela nunca ficar sem resposta.
 A decisão é sempre do controlador: a resposta é só sugestão.
 """

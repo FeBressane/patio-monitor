@@ -1,4 +1,4 @@
-# Big Data — Felipe Bressane (RM 97688)
+# Big Data
 
 | Item | Onde fica |
 |---|---|

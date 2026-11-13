@@ -1,4 +1,4 @@
-# DevOps & Cloud — Felipe Bressane (RM 97688)
+# DevOps & Cloud
 
 | Item | Onde fica |
 |---|---|

@@ -5,13 +5,13 @@ FIAP · Engenharia de Software · 4º ano · Global Solution 2026.2 · Desafio C
 
 ## Integrantes
 
-| Nome completo | RM | Disciplinas |
-|---|---|---|
-| Felipe Bressane | RM 97688 | Big Data, DevOps & Cloud |
-| Gabriel Teixeira | RM 551570 | Generative AI, Computer Vision, front do MVP |
-| Camila do Prado | RM 98316 | RPA, Maker Lab |
+| Nome completo | RM |
+|---|---|
+| Felipe Bressane | RM 97688 |
+| Gabriel Teixeira | RM 551570 |
+| Camila do Prado | RM 98316 |
 
-**MVP:** [URL pública] · **Pitch:** [link do vídeo]
+**MVP:** https://patio-monitor-gs-97688.azurewebsites.net · **Pitch:** [link do vídeo]
 
 ## Ficha Técnica do MVP
 
@@ -51,21 +51,21 @@ flowchart LR
 
 ## Estrutura do repositório (por disciplina)
 
-| Pasta | Disciplina | Responsável | Conteúdo |
-|---|---|---|---|
-| `bigdata/` | Big Data | Felipe Bressane (RM 97688) | DAG do Airflow, notebooks Bronze → Prata → Ouro, consultas e a portaria simulada |
-| `devops-cloud/` | DevOps & Cloud | Felipe Bressane (RM 97688) | Terraform (Azure App Service F1) e monitoramento (Prometheus + Grafana) |
-| `genai/` | Generative AI | Gabriel Teixeira (RM 551570) | Assistente LLM local + RAG |
-| `computer-vision/` | Computer Vision | Gabriel Teixeira (RM 551570) | Detector YOLO de veículos no pátio |
-| `rpa/` | RPA | Camila do Prado (RM 98316) | Robô de conciliação escala × portaria × rastreamento |
-| `maker-lab/` | Maker Lab | Camila do Prado (RM 98316) | Robô físico da maquete (ESP32 + RFID) |
+| Pasta | Disciplina | Conteúdo |
+|---|---|---|
+| `bigdata/` | Big Data | DAG do Airflow, notebooks Bronze → Prata → Ouro, consultas e a portaria simulada |
+| `devops-cloud/` | DevOps & Cloud | Terraform (Azure App Service F1) e monitoramento (Prometheus + Grafana) |
+| `genai/` | Generative AI | Assistente LLM local + RAG |
+| `computer-vision/` | Computer Vision | Detector YOLO de veículos no pátio |
+| `rpa/` | RPA | Robô de conciliação escala × portaria × rastreamento |
+| `maker-lab/` | Maker Lab | Robô físico da maquete (ESP32 + RFID) |
 
 **Núcleo compartilhado** (usado por todas as disciplinas):
 
 | Pasta / arquivo | Conteúdo |
 |---|---|
 | `api/` | API FastAPI do produto, Dockerfile multi-stage e testes |
-| `front/` | Front de demonstração (o front definitivo com o pátio 3D é do Gabriel) |
+| `front/` | Front de demonstração (o front definitivo, com o pátio 3D, fica em desenvolvimento à parte) |
 | `docs/contrato-api.md` | Contrato JSON de `/posicoes`, `/conciliacao` e `/assistente` |
 | `docker-compose.yml`, `.github/workflows/` | Ficam na raiz por exigência do Docker Compose e do GitHub Actions (DevOps) |
 

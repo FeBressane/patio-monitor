@@ -1,4 +1,4 @@
-"""Contrato JSON da API. Ver docs/contrato-api.md: é o que Gabe (visão/GenAI) e Camila (RPA/robô) consomem."""
+"""Contrato JSON da API. Ver docs/contrato-api.md: é o que visão, GenAI, RPA e o robô consomem."""
 from datetime import datetime
 from typing import Literal
 
@@ -74,5 +74,5 @@ class AssistenteOut(BaseModel):
     justificativa: str
     fonte: str | None
     confianca: float = Field(ge=0, le=1)
-    modo: str = Field(description="llm_rag (serviço do Gabe) ou fallback_regras")
+    modo: str = Field(description="llm_rag (serviço de GenAI) ou fallback_regras")
     contexto_veiculo: dict | None = None

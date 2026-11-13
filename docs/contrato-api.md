@@ -3,7 +3,7 @@
 Este é o contrato que as outras disciplinas usam. Mudanças nele precisam ser combinadas com a equipe.
 A documentação interativa fica em `/api/docs` na URL pública e em `http://localhost:8000/docs` quando a API roda localmente.
 
-**Autenticação dos POSTs de ingestão:** header `X-API-Key: <INGEST_API_KEY>`. A chave é passada pelo Felipe em canal privado e nunca vai para o Git.
+**Autenticação dos POSTs de ingestão:** header `X-API-Key: <INGEST_API_KEY>`. A chave é passada à equipe em canal privado e nunca vai para o Git.
 
 **Códigos de local** (os mesmos para tag RFID, zona da câmera, portaria e 3D):
 `PORTAO`, `V1` a `V12` (vagas), `P1` a `P4` (plataformas), `CIRCULACAO` (manobrando na faixa), `FORA` (em viagem).
@@ -64,9 +64,9 @@ A resposta é `{"gravados": N}`. Tudo que não for `ok` aparece em `GET /alertas
 
 ## Assistente de GenAI: `POST /assistente`
 
-O front chama a API. A API repassa ao serviço do Gabe quando `ASSISTENTE_URL` está configurada.
+O front chama a API. A API repassa ao serviço de GenAI quando `ASSISTENTE_URL` está configurada.
 
-**O que a API envia ao serviço do Gabe** (`POST ASSISTENTE_URL`):
+**O que a API envia ao serviço de GenAI** (`POST ASSISTENTE_URL`):
 
 ```json
 {
@@ -78,7 +78,7 @@ O front chama a API. A API repassa ao serviço do Gabe quando `ASSISTENTE_URL` e
 }
 ```
 
-**O que o serviço do Gabe devolve:**
+**O que o serviço de GenAI devolve:**
 
 ```json
 {
