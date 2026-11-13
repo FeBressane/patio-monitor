@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: patio
+    folder: Pátio Monitor
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards

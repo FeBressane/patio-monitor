@@ -1,0 +1,28 @@
+# segredos
+.env
+*.tfvars
+!*.tfvars.example
+*.pem
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.db
+# dados brutos coletados (amostras pequenas vão em bigdata/amostras/)
+bigdata/chegada/
+data/ouro/*.csv
+!data/ouro/fato_permanencia.exemplo.csv
+# rpa
+rpa/logs/*.log
+!rpa/logs/amostra.log
+rpa/quarentena/
+
+# token do Prometheus para ler o /metrics do MVP publicado
+monitoramento/metrics_token

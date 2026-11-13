@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - /etc/prometheus/alertas.yml
+
+scrape_configs:
+  # API rodando no docker compose local
+  - job_name: patio-api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["api:8000"]
+
+  # MVP publicado no Azure App Service (F1). O /metrics lá exige token:
+  # crie monitoramento/metrics_token (fora do Git) com o mesmo valor do secret METRICS_TOKEN.
+  - job_name: patio-azure
+    scheme: https
+    metrics_path: /metrics
+    scrape_interval: 30s # o F1 tem cota de CPU diária; não precisa raspar mais rápido
+    authorization:
+      type: Bearer
+      credentials_file: /etc/prometheus/metrics_token
+    static_configs:
+      - targets: ["patio-monitor-gs-97688.azurewebsites.net"]

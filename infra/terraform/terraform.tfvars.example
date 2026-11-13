@@ -1,0 +1,4 @@
+# Copie para terraform.tfvars (que fica fora do Git) e preencha.
+subscription_id = "00000000-0000-0000-0000-000000000000"
+regiao          = "brazilsouth"
+nome_app        = "patio-monitor-gs-97688"

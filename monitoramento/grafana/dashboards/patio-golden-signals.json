@@ -1,0 +1,47 @@
+{
+  "uid": "patio-golden",
+  "title": "Pátio Monitor · 4 sinais de ouro",
+  "timezone": "America/Sao_Paulo",
+  "refresh": "10s",
+  "time": { "from": "now-1h", "to": "now" },
+  "schemaVersion": 39,
+  "panels": [
+    {
+      "id": 1, "type": "timeseries", "title": "Latência p95 por endpoint (s)",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prom" },
+      "fieldConfig": { "defaults": { "unit": "s", "thresholds": { "mode": "absolute", "steps": [
+        { "color": "green", "value": null }, { "color": "red", "value": 0.3 } ] },
+        "custom": { "thresholdsStyle": { "mode": "line" } } }, "overrides": [] },
+      "targets": [{ "refId": "A", "legendFormat": "{{job}} {{handler}}",
+        "expr": "histogram_quantile(0.95, sum by (le, handler, job) (rate(http_request_duration_seconds_bucket[5m])))" }]
+    },
+    {
+      "id": 2, "type": "timeseries", "title": "Tráfego (req/s)",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prom" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "targets": [{ "refId": "A", "legendFormat": "{{job}} {{handler}}",
+        "expr": "sum by (job, handler) (rate(http_requests_total[1m]))" }]
+    },
+    {
+      "id": 3, "type": "timeseries", "title": "Erros (% de respostas 4xx/5xx)",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prom" },
+      "fieldConfig": { "defaults": { "unit": "percentunit" }, "overrides": [] },
+      "targets": [{ "refId": "A", "legendFormat": "{{status}}",
+        "expr": "sum by (status) (rate(http_requests_total{status=~\"4xx|5xx\"}[5m])) / ignoring(status) group_left sum(rate(http_requests_total[5m]))" }]
+    },
+    {
+      "id": 4, "type": "timeseries", "title": "Saturação (CPU e memória do processo da API)",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prom" },
+      "fieldConfig": { "defaults": {}, "overrides": [
+        { "matcher": { "id": "byName", "options": "memória MB patio-api" }, "properties": [{ "id": "custom.axisPlacement", "value": "right" }] } ] },
+      "targets": [
+        { "refId": "A", "legendFormat": "CPU {{job}}", "expr": "rate(process_cpu_seconds_total{job=~\"patio-.*\"}[1m])" },
+        { "refId": "B", "legendFormat": "memória MB {{job}}", "expr": "process_resident_memory_bytes{job=~\"patio-.*\"} / 1024 / 1024" }
+      ]
+    }
+  ]
+}

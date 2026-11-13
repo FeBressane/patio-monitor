@@ -1,0 +1,66 @@
+# Sobe o Pátio Monitor completo: front (nginx) + API + Postgres.
+# Observabilidade (Prometheus + Grafana) com:  docker compose --profile monitoramento up -d
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: patio
+      POSTGRES_USER: patio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U patio -d patio"]
+      interval: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: ./api
+    environment:
+      DATABASE_URL: postgresql+psycopg://patio:${POSTGRES_PASSWORD}@db:5432/patio
+      INGEST_API_KEY: ${INGEST_API_KEY:-}
+      ASSISTENTE_URL: ${ASSISTENTE_URL:-}
+      DEMO: ${DEMO:-true}
+      OURO_CSV: /data/ouro/fato_permanencia.csv
+    volumes:
+      - ./data:/data:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"   # só local; o acesso público é pelo front (/api)
+    restart: unless-stopped
+
+  front:
+    build: ./front
+    depends_on: [api]
+    ports:
+      - "${PORTA_PUBLICA:-80}:8080"
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    profiles: [monitoramento]
+    volumes:
+      - ./monitoramento/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoramento/alertas.yml:/etc/prometheus/alertas.yml:ro
+      - ./monitoramento/metrics_token:/etc/prometheus/metrics_token:ro
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  grafana:
+    image: grafana/grafana:11.3.1
+    profiles: [monitoramento]
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?defina GRAFANA_PASSWORD no .env}
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    volumes:
+      - ./monitoramento/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoramento/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on: [prometheus]
+    ports:
+      - "127.0.0.1:3000:3000"
+
+volumes:
+  pgdata:

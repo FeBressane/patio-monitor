@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pátio Monitor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Front de DEMONSTRAÇÃO: só mostra que a API responde. O front definitivo (pátio 3D) é do Gabi. -->
+  <header>
+    <h1>Pátio Monitor <small>demonstração da API</small></h1>
+    <span id="conexao" role="status">conectando…</span>
+  </header>
+  <main>
+    <section>
+      <h2>Pendências</h2>
+      <ul id="alertas"></ul>
+    </section>
+    <section>
+      <h2>Veículos</h2>
+      <table>
+        <thead><tr><th>Prefixo</th><th>Linha</th><th>Local</th><th>Estado</th><th>No pátio</th><th>Conciliação</th><th></th></tr></thead>
+        <tbody id="veiculos"></tbody>
+      </table>
+    </section>
+    <section id="resposta" hidden>
+      <h2>Assistente</h2>
+      <div id="texto-resposta"></div>
+      <p class="aviso">Sugestão do assistente. A decisão é do controlador.</p>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
