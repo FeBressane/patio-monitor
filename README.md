@@ -49,19 +49,25 @@ flowchart LR
   PROM --> GRAF[Grafana]
 ```
 
-## Estrutura do repositório
+## Estrutura do repositório (por disciplina)
 
-| Pasta | Conteúdo | Disciplina |
-|---|---|---|
-| `api/` | API FastAPI, Dockerfile multi-stage e testes | DevOps / todas |
-| `front/` | Front de demonstração servido por nginx (o front definitivo com o pátio 3D é do Gabriel) | todas |
-| `docs/contrato-api.md` | Contrato JSON de `/posicoes`, `/conciliacao` e `/assistente` | todas |
-| `bigdata/dags/` | DAG `patio_coleta` do Airflow | Big Data |
-| `bigdata/databricks/` | Notebooks Bronze, Prata, Ouro e as 5 consultas | Big Data |
-| `bigdata/scripts/gerar_portaria.py` | Geração documentada da portaria e da escala simuladas | Big Data |
-| `infra/terraform/` | Azure App Service F1 (custo zero) | DevOps |
-| `.github/workflows/ci-cd.yml` | Testes, Gitleaks, Semgrep, Trivy e deploy | DevOps |
-| `monitoramento/` | Prometheus, alertas e painel Grafana dos 4 sinais de ouro | DevOps |
+| Pasta | Disciplina | Responsável | Conteúdo |
+|---|---|---|---|
+| `bigdata/` | Big Data | Felipe Bressane (RM 97688) | DAG do Airflow, notebooks Bronze → Prata → Ouro, consultas e a portaria simulada |
+| `devops-cloud/` | DevOps & Cloud | Felipe Bressane (RM 97688) | Terraform (Azure App Service F1) e monitoramento (Prometheus + Grafana) |
+| `genai/` | Generative AI | Gabriel Teixeira (RM 551570) | Assistente LLM local + RAG |
+| `computer-vision/` | Computer Vision | Gabriel Teixeira (RM 551570) | Detector YOLO de veículos no pátio |
+| `rpa/` | RPA | Camila do Prado (RM 98316) | Robô de conciliação escala × portaria × rastreamento |
+| `maker-lab/` | Maker Lab | Camila do Prado (RM 98316) | Robô físico da maquete (ESP32 + RFID) |
+
+**Núcleo compartilhado** (usado por todas as disciplinas):
+
+| Pasta / arquivo | Conteúdo |
+|---|---|
+| `api/` | API FastAPI do produto, Dockerfile multi-stage e testes |
+| `front/` | Front de demonstração (o front definitivo com o pátio 3D é do Gabriel) |
+| `docs/contrato-api.md` | Contrato JSON de `/posicoes`, `/conciliacao` e `/assistente` |
+| `docker-compose.yml`, `.github/workflows/` | Ficam na raiz por exigência do Docker Compose e do GitHub Actions (DevOps) |
 
 ## Como rodar localmente
 
@@ -113,7 +119,7 @@ Mesmo caminho da GS Cloud do AgroSatélite (semestre passado): **Azure App Servi
 
 Limites do F1, que entram no PDF: 60 min de CPU por dia, 1 GB de RAM e sem Always On. Depois de cerca de 20 min sem acesso o app dorme, e a primeira requisição demora alguns segundos.
 
-1. `az login` e `cd infra/terraform`. Copie `terraform.tfvars.example` → `terraform.tfvars` (fica fora do Git) e coloque o `subscription_id`.
+1. `az login` e `cd devops-cloud/terraform`. Copie `terraform.tfvars.example` → `terraform.tfvars` (fica fora do Git) e coloque o `subscription_id`.
 2. `terraform init && terraform apply`. A saída `url_mvp` é a URL pública.
 3. Crie o service principal do deploy com acesso só ao resource group, igual ao `GUIA_AZURE` da GS Cloud:
    `az ad sp create-for-rbac --name sp-patio-monitor --role contributor --scopes /subscriptions/<id>/resourceGroups/rg-patio-monitor --sdk-auth`
@@ -122,7 +128,7 @@ Limites do F1, que entram no PDF: 60 min de CPU por dia, 1 GB de RAM e sem Alway
 
 **Porta de administração:** o App Service não tem SSH aberto. O painel Kudu/SCM e o FTP ficam sem login por senha (FTP desligado), então só entra quem tem acesso Entra ID com RBAC.
 
-**Observabilidade:** coloque o mesmo valor do secret `METRICS_TOKEN` no arquivo `monitoramento/metrics_token` (fora do Git) e rode `docker compose --profile monitoramento up -d`. O Prometheus lê o `/metrics` do MVP publicado (job `patio-azure`), e o Grafana mostra os 4 sinais de ouro.
+**Observabilidade:** coloque o mesmo valor do secret `METRICS_TOKEN` no arquivo `devops-cloud/monitoramento/metrics_token` (fora do Git) e rode `docker compose --profile monitoramento up -d`. O Prometheus lê o `/metrics` do MVP publicado (job `patio-azure`), e o Grafana mostra os 4 sinais de ouro.
 
 O `docker compose` (front nginx + API + Postgres) é a stack completa para rodar e demonstrar localmente. Na nuvem, o mesmo código roda no App Service com SQLite, para não ter custo.
 
@@ -130,5 +136,5 @@ O `docker compose` (front nginx + API + Postgres) é a stack completa para rodar
 
 - A matrícula e o nome do motorista existem só na portaria simulada (são fictícios) e chegam à Ouro como SHA-256. A API não expõe essas colunas.
 - Os logs da API e do assistente não guardam nome de motorista.
-- Os segredos ficam em `.env` local, em GitHub Secrets ou nas App Settings do App Service (gravadas pelo pipeline). O `.gitignore` bloqueia `.env`, `*.tfvars`, `*.tfstate` e `monitoramento/metrics_token`.
+- Os segredos ficam em `.env` local, em GitHub Secrets ou nas App Settings do App Service (gravadas pelo pipeline). O `.gitignore` bloqueia `.env`, `*.tfvars`, `*.tfstate` e `devops-cloud/monitoramento/metrics_token`.
 - Os containers rodam com usuário não root. Na nuvem, o `/metrics` exige token.

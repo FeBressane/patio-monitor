@@ -25,4 +25,4 @@ rpa/logs/*.log
 rpa/quarentena/
 
 # token do Prometheus para ler o /metrics do MVP publicado
-monitoramento/metrics_token
+devops-cloud/monitoramento/metrics_token

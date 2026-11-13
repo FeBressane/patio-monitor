@@ -13,7 +13,7 @@ scrape_configs:
       - targets: ["api:8000"]
 
   # MVP publicado no Azure App Service (F1). O /metrics lá exige token:
-  # crie monitoramento/metrics_token (fora do Git) com o mesmo valor do secret METRICS_TOKEN.
+  # crie devops-cloud/monitoramento/metrics_token (fora do Git) com o mesmo valor do secret METRICS_TOKEN.
   - job_name: patio-azure
     scheme: https
     metrics_path: /metrics

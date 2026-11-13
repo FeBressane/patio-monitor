@@ -43,9 +43,9 @@ services:
     image: prom/prometheus:v2.55.1
     profiles: [monitoramento]
     volumes:
-      - ./monitoramento/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./monitoramento/alertas.yml:/etc/prometheus/alertas.yml:ro
-      - ./monitoramento/metrics_token:/etc/prometheus/metrics_token:ro
+      - ./devops-cloud/monitoramento/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./devops-cloud/monitoramento/alertas.yml:/etc/prometheus/alertas.yml:ro
+      - ./devops-cloud/monitoramento/metrics_token:/etc/prometheus/metrics_token:ro
     ports:
       - "127.0.0.1:9090:9090"
 
@@ -56,8 +56,8 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?defina GRAFANA_PASSWORD no .env}
       GF_AUTH_ANONYMOUS_ENABLED: "false"
     volumes:
-      - ./monitoramento/grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./monitoramento/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./devops-cloud/monitoramento/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./devops-cloud/monitoramento/grafana/dashboards:/var/lib/grafana/dashboards:ro
     depends_on: [prometheus]
     ports:
       - "127.0.0.1:3000:3000"
