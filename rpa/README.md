@@ -1,12 +1,8 @@
-# RPA
+# Robotic Process Automation
 
-Pasta do robô de conciliação (escala prevista × portaria × rastreamento).
+A automação de RPA do Pátio Monitor fica num repositório próprio:
 
-**O que vai aqui:** fluxo/robô de RPA, entradas de exemplo, logs de amostra (`logs/amostra.log`) e o PDF da disciplina.
-O `.gitignore` já bloqueia `rpa/logs/*.log` (menos a amostra) e `rpa/quarentena/`.
+🔗 **[RPABusGate_PatioMonitorGS2026](https://github.com/camilapadalino/RPABusGate_PatioMonitorGS2026)**: workflows no n8n que recebem, auditam e disponibilizam os eventos do Smart Bus Gate.
 
-**Integração com a API:** o robô envia lotes para `POST /api/conciliacao` com o header `X-API-Key`.
-Formato e valores de `status` em [`docs/contrato-api.md`](../docs/contrato-api.md#robô-de-rpa-post-conciliacao).
-A portaria e a escala simuladas saem de `bigdata/scripts/gerar_portaria.py`.
-
-> Pendente: código desta disciplina.
+**Integração com este repositório:** a automação pode gravar no MVP pela API (`POST /api/conciliacao` ou `POST /api/posicoes`, com o header `X-API-Key`).
+Formato em [`docs/contrato-api.md`](../docs/contrato-api.md).

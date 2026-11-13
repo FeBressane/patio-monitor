@@ -94,6 +94,10 @@ def patio_coleta():
         if _ja_coletado_hoje("gtfs_trips", ts):
             raise AirflowSkipException("GTFS já coletado hoje (fonte diária)")
         origem = Variable.get("gtfs_zip_url")
+        if not origem.startswith("http") and not Path(origem).exists():
+            # O GTFS exige login no portal da SPTrans e é baixado à mão. Sem ele, a coleta de posições
+            # (que não tem histórico e não pode esperar) continua; o aviso fica no log da tarefa.
+            raise AirflowSkipException(f"GTFS ainda não disponível em {origem}: baixe no portal da SPTrans")
         conteudo = Path(origem).read_bytes() if Path(origem).exists() else requests.get(origem, timeout=120).content
         with zipfile.ZipFile(io.BytesIO(conteudo)) as z:
             for arq in ("trips.txt", "stop_times.txt", "routes.txt"):

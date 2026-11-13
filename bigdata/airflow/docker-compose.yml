@@ -1,18 +1,29 @@
 # Airflow local para o DAG patio_coleta (modo standalone: 1 container).
 #   cd bigdata/airflow
 #   cp .env.example .env        # coloque o token da SPTrans (o .env fica fora do Git)
-#   docker compose up -d        # interface em http://localhost:8080
+#   docker compose up -d        # interface em http://localhost:8081
 #   docker compose exec airflow airflow users create -u admin -p <senha> -r Admin -f Admin -l Patio -e admin@example.com
 #
 # As Variables do DAG vêm de variáveis de ambiente AIRFLOW_VAR_* (lidas do .env),
 # então o token nunca passa pelo código, pelo banco do Airflow nem pelo repositório.
 services:
+  # O volume nasce com dono root; o Airflow roda como uid 50000 e precisa gravar o banco nele.
+  permissoes:
+    image: apache/airflow:2.10.5-python3.12
+    user: "0:0"
+    entrypoint: ["chown", "-R", "50000:0", "/opt/airflow/estado"]
+    volumes:
+      - airflow-estado:/opt/airflow/estado
+
   airflow:
     image: apache/airflow:2.10.5-python3.12
     command: standalone
+    depends_on:
+      permissoes:
+        condition: service_completed_successfully
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8080:8080"   # só nesta máquina
+      - "127.0.0.1:8081:8080"   # só nesta máquina (8080 já é do front no compose da raiz)
     environment:
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__CORE__DEFAULT_TIMEZONE: America/Sao_Paulo

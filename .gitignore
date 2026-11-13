@@ -32,3 +32,5 @@ devops-cloud/monitoramento/metrics_token
 # Airflow local (Big Data)
 bigdata/airflow/.env
 bigdata/airflow/gtfs/
+# overrides locais (ex.: CA de antivírus com inspeção HTTPS)
+docker-compose.override.yml
