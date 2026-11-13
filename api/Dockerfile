@@ -9,7 +9,8 @@ RUN /venv/bin/pip install -r requirements.txt
 # Estágio 2: imagem final enxuta, só com o venv e o código, rodando como usuário não root
 FROM python:3.12-slim
 ENV PATH="/venv/bin:$PATH" PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
-RUN useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin patio
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/* \
+ && useradd --uid 10001 --no-create-home --shell /usr/sbin/nologin patio
 WORKDIR /app
 COPY --from=build /venv /venv
 COPY app ./app
