@@ -202,8 +202,13 @@
   <li><code>TaxaDeErros5xx</code>: mais de 5% de respostas 5xx.</li>
   <li><code>ApiFora</code>: alvo sem responder por 1 min.</li>
 </ul>
+<h3>O que foi medido</h3>
+<ul>
+  <li><b>Latência:</b> com cerca de 800 requisições reais em 5 minutos (13/11/2026, 21h), o p95 de <code>/api/posicoes</code> e dos demais endpoints ficou em <b>~95 ms</b>, abaixo da meta de 300 ms do alerta.</li>
+  <li><b>Alerta disparado (teste controlado de queda):</b> às 21:24 o App Service foi parado de propósito (<code>az webapp stop</code>). O <code>up</code> do job <code>patio-azure</code> foi a 0, o alerta <code>ApiFora</code> passou de <i>pending</i> para <b><i>firing</i></b>, e às 21:30 o app foi religado (<code>/health</code> voltou com 200). O painel "Alertas do Prometheus" do dashboard mostra o disparo.</li>
+</ul>
 <div class="print">[PRINT: dashboard "Pátio Monitor · 4 sinais de ouro" com dados do MVP publicado]</div>
-<div class="print">[PRINT: Prometheus › Alerts com um alerta disparado (Firing)]</div>
+<div class="print">[PRINT: painel "Alertas do Prometheus" (ou Prometheus › Graph com a consulta <code>ALERTS</code>, última 1 h) mostrando ApiFora em firing por volta das 21:28 de 13/11]</div>
 
 <!-- ===================== 7. RESPONSABILIDADE ===================== -->
 <h2 class="quebra">7. Modelo de responsabilidade compartilhada</h2>
