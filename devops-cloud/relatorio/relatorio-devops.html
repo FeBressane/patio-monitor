@@ -50,7 +50,7 @@
   <div class="integrantes"><b>Integrantes</b><br>
     Camila do Prado Padalino · RM 98316<br>Felipe Cavalcante Bressane · RM 97688<br>Gabriel Teixeira Machado · RM 551570</div>
   <div class="links">
-    Repositório: <a href="https://github.com/FeBressane/patio-monitor">github.com/FeBressane/patio-monitor</a><br>
+    Repositório: <a href="https://github.com/FeBressane/patio-monitor-devops">github.com/FeBressane/patio-monitor-devops</a><br>
     MVP: <a href="https://patio-monitor-gs-97688.azurewebsites.net">patio-monitor-gs-97688.azurewebsites.net</a><br><br>
     São Paulo, novembro de 2026</div>
 </section>
@@ -68,7 +68,7 @@
   <tr><td>ODS</td><td>ODS 11 (meta 11.2) e ODS 9.</td></tr>
   <tr><td>URL do MVP</td><td><a href="https://patio-monitor-gs-97688.azurewebsites.net">https://patio-monitor-gs-97688.azurewebsites.net</a> · Swagger em <a href="https://patio-monitor-gs-97688.azurewebsites.net/docs">/docs</a></td></tr>
 </table>
-<p>A mesma ficha abre o <a href="https://github.com/FeBressane/patio-monitor#readme">README do repositório</a>.</p>
+<p>A mesma ficha abre o <a href="https://github.com/FeBressane/patio-monitor-devops#readme">README do repositório</a>.</p>
 
 <!-- ===================== 2. ARQUITETURA ===================== -->
 <h2>2. Diagrama da arquitetura</h2>
@@ -130,16 +130,16 @@
 <!-- ===================== 3. CONTAINERS ===================== -->
 <h2>3. Containers (Docker)</h2>
 <ul>
-  <li><a href="https://github.com/FeBressane/patio-monitor/blob/main/api/Dockerfile"><code>api/Dockerfile</code></a>: <b>multi-stage</b>. O 1º estágio instala as dependências num venv, e a imagem final <code>python:3.12-slim</code> leva só o venv e o código. Roda como <b>usuário não root</b> (<code>uid 10001</code>), com <code>HEALTHCHECK</code> em <code>/health</code>.</li>
-  <li><a href="https://github.com/FeBressane/patio-monitor/blob/main/front/Dockerfile"><code>front/Dockerfile</code></a>: front servido por <b>nginx sem root</b>, com proxy de <code>/api</code> para a API.</li>
-  <li><a href="https://github.com/FeBressane/patio-monitor/blob/main/docker-compose.yml"><code>docker-compose.yml</code></a>: sobe <b>front + API + Postgres</b>. A API só escuta em <code>127.0.0.1</code>, e o acesso público passa pelo front. O profile <code>monitoramento</code> sobe Prometheus e Grafana.</li>
+  <li><a href="https://github.com/FeBressane/patio-monitor-devops/blob/main/api/Dockerfile"><code>api/Dockerfile</code></a>: <b>multi-stage</b>. O 1º estágio instala as dependências num venv, e a imagem final <code>python:3.12-slim</code> leva só o venv e o código. Roda como <b>usuário não root</b> (<code>uid 10001</code>), com <code>HEALTHCHECK</code> em <code>/health</code>.</li>
+  <li><a href="https://github.com/FeBressane/patio-monitor-devops/blob/main/front/Dockerfile"><code>front/Dockerfile</code></a>: front servido por <b>nginx sem root</b>, com proxy de <code>/api</code> para a API.</li>
+  <li><a href="https://github.com/FeBressane/patio-monitor-devops/blob/main/docker-compose.yml"><code>docker-compose.yml</code></a>: sobe <b>front + API + Postgres</b>. A API só escuta em <code>127.0.0.1</code>, e o acesso público passa pelo front. O profile <code>monitoramento</code> sobe Prometheus e Grafana.</li>
   <li><b>Nenhum segredo dentro da imagem.</b> Senhas e chaves vêm de variáveis de ambiente (<code>.env</code> local, fora do Git, ou App Settings na nuvem).</li>
   <li>O Trivy varre as duas imagens no pipeline e barra qualquer CVE <b>HIGH/CRITICAL</b> com correção disponível. As imagens atuais passam sem nenhuma.</li>
 </ul>
 
 <!-- ===================== 4. IAC ===================== -->
 <h2>4. Infraestrutura como código (Terraform)</h2>
-<p><a href="https://github.com/FeBressane/patio-monitor/tree/main/devops-cloud/terraform"><code>devops-cloud/terraform/</code></a> descreve o ambiente inteiro: resource group, <b>App Service Plan F1</b> (Linux) e o <b>Linux Web App</b> Python 3.12.</p>
+<p><a href="https://github.com/FeBressane/patio-monitor-devops/tree/main/devops-cloud/terraform"><code>devops-cloud/terraform/</code></a> descreve o ambiente inteiro: resource group, <b>App Service Plan F1</b> (Linux) e o <b>Linux Web App</b> Python 3.12.</p>
 <table>
   <tr><th style="width:38%">Exigência de segurança</th><th>Como o Pátio Monitor atende</th></tr>
   <tr><td>Expor só 80/443</td><td>O App Service só recebe tráfego HTTP/HTTPS, e <code>https_only = true</code> redireciona o HTTP para HTTPS. TLS mínimo 1.2, HTTP/2 ligado.</td></tr>
@@ -151,7 +151,8 @@
 <div class="caixa"><b>Por que App Service e não uma VM.</b> A VM exigiria abrir e manter portas, SO e patches, e custaria crédito (uma B1s fica ligada 24 h até 26/11). O App Service F1 é PaaS: a Azure cuida do SO e do runtime, o custo é US$ 0, e a superfície de ataque é menor, porque não há porta 22 para proteger. A mesma API roda em container no <code>docker compose</code>, o que demonstra a parte de containers.</div>
 <h3>Problemas reais encontrados no provisionamento</h3>
 <ul>
-  <li><b>x509 / <code>CERTIFICATE_VERIFY_FAILED</code>:</b> o "Web/Mail Shield" do antivírus Norton intercepta HTTPS com uma CA própria. O Azure CLI (Python) e o Terraform (Go) não confiam nela. A correção foi juntar a raiz do Norton ao <code>cacert.pem</code> do Azure CLI (<code>REQUESTS_CA_BUNDLE</code>) e desligar a inspeção HTTPS durante o <code>terraform apply</code>.</li>
+  <li><b>x509 / <code>CERTIFICATE_VERIFY_FAILED</code>:</b> o "Web/Mail Shield" do antivírus Norton intercepta HTTPS com uma CA própria. O Azure CLI (Python) e o Terraform (Go) não confiam nela. O antivírus intercepta até o TLS local entre o Terraform e o plugin <code>azurerm</code>. A correção foi juntar a raiz do Norton ao <code>cacert.pem</code> do Azure CLI (<code>REQUESTS_CA_BUNDLE</code>) e rodar o Terraform com <code>TF_DISABLE_PLUGIN_TLS=1</code>, que desliga só esse TLS local entre os dois processos (a conexão com a Azure continua em HTTPS).</li>
+  <li><b>Recursos criados antes do Terraform funcionar:</b> durante o bloqueio do certificado, o ambiente foi criado com <code>az</code> CLI. Depois, os 3 recursos foram trazidos para o código com <code>terraform import</code> e o <code>terraform apply</code> alinhou a configuração. Desde então o <code>terraform plan</code> não mostra diferença: a nuvem é gerida pelo Terraform.</li>
   <li><b>Política de regiões do Azure for Students:</b> só libera brazilsouth, chilecentral, canadacentral, eastus2 e centralus (<code>RequestDisallowedByAzure</code> em eastus).</li>
   <li><b>Limite de 1 plano F1 Linux por região:</b> o F1 de Brazil South estava ocupado por um projeto antigo, que foi removido para liberar a região.</li>
 </ul>
@@ -159,7 +160,7 @@
 
 <!-- ===================== 5. PIPELINE ===================== -->
 <h2 class="quebra">5. Pipeline CI/CD DevSecOps (GitHub Actions)</h2>
-<p>Arquivo: <a href="https://github.com/FeBressane/patio-monitor/blob/main/.github/workflows/ci-cd.yml"><code>.github/workflows/ci-cd.yml</code></a>. Roda a cada push em qualquer branch e em pull requests. O deploy só acontece na <code>main</code>.</p>
+<p>Arquivo: <a href="https://github.com/FeBressane/patio-monitor-devops/blob/main/.github/workflows/ci-cd.yml"><code>.github/workflows/ci-cd.yml</code></a>. Roda a cada push em qualquer branch e em pull requests. O deploy só acontece na <code>main</code>.</p>
 <table>
   <tr><th>Job</th><th>O que faz</th><th>Barra quando</th></tr>
   <tr><td>testes</td><td><code>pytest</code> da API (12 testes: health, ingestão com chave, robô movendo ônibus, conciliação…)</td><td>algum teste falha</td></tr>
@@ -178,8 +179,8 @@
 <p>No branch <code>demo/pipeline-barrado</code>, um token <b>falso</b> foi commitado de propósito em <code>api/app/sptrans_cliente.py</code>.</p>
 <table>
   <tr><th>Execução</th><th>Resultado</th><th>Detalhe</th></tr>
-  <tr><td><a href="https://github.com/FeBressane/patio-monitor/actions/runs/43524648708">#43524648708</a></td><td class="erro">Barrada</td><td>O Gitleaks encontrou o token, e o build, o scan das imagens e o deploy foram <b>pulados</b>.</td></tr>
-  <tr><td><a href="https://github.com/FeBressane/patio-monitor/actions/runs/43524768351">#43524768351</a></td><td class="ok">Corrigida</td><td>O token passou a vir de variável de ambiente (<code>os.getenv</code>), e o commit foi reescrito para o valor não ficar no histórico. Todos os jobs passaram.</td></tr>
+  <tr><td><a href="https://github.com/FeBressane/patio-monitor-devops/actions/runs/43524648708">#43524648708</a></td><td class="erro">Barrada</td><td>O Gitleaks encontrou o token, e o build, o scan das imagens e o deploy foram <b>pulados</b>.</td></tr>
+  <tr><td><a href="https://github.com/FeBressane/patio-monitor-devops/actions/runs/43524768351">#43524768351</a></td><td class="ok">Corrigida</td><td>O token passou a vir de variável de ambiente (<code>os.getenv</code>), e o commit foi reescrito para o valor não ficar no histórico. Todos os jobs passaram.</td></tr>
 </table>
 <div class="print">[PRINT: execução #43524648708 com o job Gitleaks em vermelho e o log mostrando o achado]</div>
 <div class="print">[PRINT: execução #43524768351 com todos os jobs em verde]</div>
@@ -195,7 +196,7 @@
   <tr><td>Erros</td><td>% de respostas 4xx/5xx</td></tr>
   <tr><td>Saturação</td><td>CPU e memória do processo da API</td></tr>
 </table>
-<p><b>Alertas</b> (<a href="https://github.com/FeBressane/patio-monitor/blob/main/devops-cloud/monitoramento/alertas.yml"><code>alertas.yml</code></a>):</p>
+<p><b>Alertas</b> (<a href="https://github.com/FeBressane/patio-monitor-devops/blob/main/devops-cloud/monitoramento/alertas.yml"><code>alertas.yml</code></a>):</p>
 <ul>
   <li><code>LatenciaP95PosicoesAlta</code>: p95 de <code>/posicoes</code> acima de <b>300 ms</b> por 2 min. É assim que a promessa de baixa latência do produto é medida, em vez de ser só afirmada.</li>
   <li><code>TaxaDeErros5xx</code>: mais de 5% de respostas 5xx.</li>
@@ -224,7 +225,7 @@
 <p>O único dado pessoal do domínio é o do <b>motorista</b> (matrícula e nome). No projeto ele é <b>fictício</b>: é gerado pela portaria simulada com nomes do tipo "Motorista A".</p>
 <table>
   <tr><th>Lugar</th><th>Dado do motorista</th></tr>
-  <tr><td>Portaria simulada (<code>bigdata/chegada/</code>, fora do Git) e camadas Bronze/Prata no Databricks</td><td>Texto (fictício)</td></tr>
+  <tr><td>Portaria simulada (pasta <code>chegada/</code> do repositório <a href="https://github.com/FeBressane/patio-monitor-bigdata">patio-monitor-bigdata</a>, fora do Git) e camadas Bronze/Prata no Databricks</td><td>Texto (fictício)</td></tr>
   <tr><td>Camada Ouro (<code>fato_permanencia</code>) no Databricks</td><td><b>Só hash SHA-256</b> da matrícula e do nome</td></tr>
   <tr><td>Export CSV da Ouro, API, SQLite do App Service, Postgres do compose</td><td><b>Nenhum</b>: o export não tem as colunas, e a API ainda filtra qualquer coluna com "motorista"</td></tr>
   <tr><td>Logs da API e do assistente</td><td>Nenhum</td></tr>
@@ -249,7 +250,7 @@
 <!-- ===================== 10. CONCLUSÃO ===================== -->
 <h2>10. Conclusão</h2>
 <p>O Pátio Monitor está publicado numa URL pública em HTTPS, com custo zero, e só chega à nuvem por um pipeline que testa, procura segredos, faz análise estática e varre dependências e imagens antes do deploy. A execução barrada mostra o pipeline impedindo que um segredo vá para produção. O Grafana mede a latência que o produto promete, em vez de só afirmá-la.</p>
-<p><b>Links:</b> repositório <a href="https://github.com/FeBressane/patio-monitor">github.com/FeBressane/patio-monitor</a> · MVP <a href="https://patio-monitor-gs-97688.azurewebsites.net">patio-monitor-gs-97688.azurewebsites.net</a> · Swagger <a href="https://patio-monitor-gs-97688.azurewebsites.net/docs">/docs</a> · pipeline <a href="https://github.com/FeBressane/patio-monitor/actions">Actions</a></p>
+<p><b>Links:</b> repositório <a href="https://github.com/FeBressane/patio-monitor-devops">github.com/FeBressane/patio-monitor-devops</a> · MVP <a href="https://patio-monitor-gs-97688.azurewebsites.net">patio-monitor-gs-97688.azurewebsites.net</a> · Swagger <a href="https://patio-monitor-gs-97688.azurewebsites.net/docs">/docs</a> · pipeline <a href="https://github.com/FeBressane/patio-monitor-devops/actions">Actions</a></p>
 
 </body>
 </html>

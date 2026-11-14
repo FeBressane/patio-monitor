@@ -90,7 +90,7 @@ flowchart LR
 | Componente | Disciplina | Onde está |
 |---|---|---|
 | 🔌 API, front de demonstração e contrato JSON | Núcleo do produto | [`api/`](api/), [`front/`](front/), [`docs/contrato-api.md`](docs/contrato-api.md) |
-| 📊 Pipeline de dados (Airflow + Databricks) | Big Data Architecture & Data Integration | [`bigdata/`](bigdata/) |
+| 📊 Pipeline de dados (Airflow + Databricks) | Big Data Architecture & Data Integration | [patio-monitor-bigdata](https://github.com/FeBressane/patio-monitor-bigdata) |
 | 🚀 Containers, Terraform, CI/CD e observabilidade | Secure DevOps Tools & Cloud Computing | [`devops-cloud/`](devops-cloud/) |
 | 🤖 Automação de eventos no n8n | Robotic Process Automation | [RPABusGate_PatioMonitorGS2026](https://github.com/camilapadalino/RPABusGate_PatioMonitorGS2026) |
 | 🚦 Smart Bus Gate (ESP32, sensores e IA) | Project-Based Maker Lab | [SmartBusGate_PatioMonitorGS26](https://github.com/camilapadalino/SmartBusGate_PatioMonitorGS26) |
@@ -130,27 +130,11 @@ O contrato completo, com os códigos de local (`PORTAO`, `V1`–`V12`, `P1`–`P
 
 Com `DEMO=true`, a API cria 10 ônibus fictícios e alguns alertas, e move esses ônibus sozinha. O selo "DEMO · dados simulados" aparece na tela. Assim que um sensor, a câmera ou o GPS mandam um evento de um veículo, a simulação deixa de mexer nele.
 
-## 📊 Pipeline de dados (Big Data)
+## 📊 Dados (Big Data)
 
-| Fonte | Origem | Formato | Coleta |
-|---|---|---|---|
-| Posições dos veículos | SPTrans Olho Vivo, filtrada por raio em volta do Terminal Pirituba | JSON | De hora em hora |
-| Viagens previstas (escala) | GTFS da SPTrans (`trips`, `stop_times`, `routes`) | CSV | Diária |
-| Clima | Open-Meteo (fonte complementar: chuva × atraso) | JSON | Diária |
-| Portaria | CSV simulado a partir das posições reais, com regra documentada | CSV | Diária |
+O pipeline de dados fica num repositório próprio: 🔗 **[patio-monitor-bigdata](https://github.com/FeBressane/patio-monitor-bigdata)**. Ele coleta as posições reais da SPTrans Olho Vivo, o GTFS e o clima no Airflow e trata tudo em Bronze → Prata → Ouro no Databricks.
 
-1. **Coleta:** o DAG [`patio_coleta`](bigdata/dags/patio_coleta.py) roda `@hourly` com `catchup=False`, porque a Olho Vivo só devolve a posição atual. Para subir o Airflow local:
-   ```bash
-   cd bigdata/airflow
-   cp .env.example .env          # coloque o SPTRANS_TOKEN (o .env fica fora do Git)
-   docker compose up -d          # interface em http://localhost:8081
-   ```
-2. **Portaria e escala simuladas** (depois de ter lotes de pelo menos 2 dias):
-   `python bigdata/scripts/gerar_portaria.py bigdata/chegada bigdata/chegada`
-3. **Databricks:** suba os arquivos de `chegada/` para o Volume `/Volumes/workspace/patio/chegada` e rode os notebooks `01_bronze` → `02_prata` → `03_ouro` → `04_consultas`.
-4. **MVP:** exporte o resultado do `03_ouro` como `data/ouro/fato_permanencia.csv` e faça commit. O export não tem nenhuma coluna de motorista, e o deploy leva o arquivo ao App Service, que o serve em `GET /permanencia`.
-
-Nenhum token ou dado pessoal real vai para o repositório.
+**Como a Ouro chega ao MVP:** o resultado da `fato_permanencia` é exportado como `data/ouro/fato_permanencia.csv` neste repositório. O export não tem nenhuma coluna de motorista, e o deploy leva o arquivo ao App Service, que o serve em `GET /api/permanencia`.
 
 ## 🚀 Deploy e DevOps (custo zero)
 
@@ -187,7 +171,9 @@ Limites do F1: 60 min de CPU por dia, 1 GB de RAM e sem Always On. Depois de cer
 
 **Região:** `brazilsouth`. A Azure permite só um plano F1 Linux por região e por assinatura, e a política do Azure for Students só libera brazilsouth, chilecentral, canadacentral, eastus2 e centralus.
 
-**Certificado (x509 / `CERTIFICATE_VERIFY_FAILED`):** antivírus com inspeção HTTPS (no nosso caso, o "Web/Mail Shield" do Norton) quebra o Azure CLI e o Terraform. A solução foi juntar a raiz do antivírus ao `cacert.pem` do Azure CLI e apontar `REQUESTS_CA_BUNDLE` para esse arquivo. No Git Bash, use `MSYS_NO_PATHCONV=1` antes de `--scopes /subscriptions/...`.
+**Certificado (x509 / `CERTIFICATE_VERIFY_FAILED`):** antivírus com inspeção HTTPS (no nosso caso, o "Web/Mail Shield" do Norton) quebra o Azure CLI e o Terraform. A solução foi juntar a raiz do antivírus ao `cacert.pem` do Azure CLI e apontar `REQUESTS_CA_BUNDLE` para esse arquivo. No Terraform, use `TF_DISABLE_PLUGIN_TLS=1`: o antivírus intercepta até o TLS local entre o Terraform e o plugin `azurerm`. No Git Bash, use `MSYS_NO_PATHCONV=1` antes de `--scopes /subscriptions/...`.
+
+**Recursos que já existem:** se o ambiente foi criado antes pelo `az` CLI, traga-o para o state com `terraform import` (resource group, service plan e web app) antes do `terraform apply`.
 </details>
 
 **📈 Observabilidade:** coloque o valor do secret `METRICS_TOKEN` em `devops-cloud/monitoramento/metrics_token` (fora do Git) e rode `docker compose --profile monitoramento up -d`. O Prometheus lê o `/metrics` do MVP publicado, e o Grafana (http://localhost:3000) mostra latência, tráfego, erros e saturação, com alerta de p95 de `/posicoes` acima de 300 ms.
@@ -236,7 +222,7 @@ O Pátio Monitor ataca um problema que o passageiro sente na plataforma e o cont
 - **API (Swagger):** https://patio-monitor-gs-97688.azurewebsites.net/docs
 - **Repositório RPA:** https://github.com/camilapadalino/RPABusGate_PatioMonitorGS2026
 - **Repositório Maker Lab (Smart Bus Gate):** https://github.com/camilapadalino/SmartBusGate_PatioMonitorGS26
-- **Pipeline CI/CD:** https://github.com/FeBressane/patio-monitor/actions
+- **Pipeline CI/CD:** https://github.com/FeBressane/patio-monitor-devops/actions
 
 ---
 

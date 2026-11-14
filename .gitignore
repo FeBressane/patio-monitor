@@ -15,8 +15,7 @@ __pycache__/
 venv/
 .pytest_cache/
 *.db
-# dados brutos coletados (amostras pequenas vão em bigdata/amostras/)
-bigdata/chegada/
+# (o pipeline de dados e a pasta chegada/ ficam no repositório patio-monitor-bigdata)
 data/ouro/*.csv
 !data/ouro/fato_permanencia.exemplo.csv
 # Export da Ouro: sem nenhuma coluna de motorista (nem hash). Vai para o Git para o deploy levar ao App Service.
@@ -29,8 +28,5 @@ rpa/quarentena/
 # token do Prometheus para ler o /metrics do MVP publicado
 devops-cloud/monitoramento/metrics_token
 
-# Airflow local (Big Data)
-bigdata/airflow/.env
-bigdata/airflow/gtfs/
 # overrides locais (ex.: CA de antivírus com inspeção HTTPS)
 docker-compose.override.yml

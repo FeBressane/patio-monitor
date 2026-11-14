@@ -65,6 +65,7 @@ resource "azurerm_linux_web_app" "patio" {
   # pipeline a partir do GitHub Secrets, para não passarem pelo state do Terraform.
   app_settings = {
     SCM_DO_BUILD_DURING_DEPLOYMENT = "true"
+    WEBSITES_PORT                  = "8000"                          # porta do uvicorn no app_command_line
     DATABASE_URL                   = "sqlite:////home/data/patio.db" # /home é persistente no App Service
     DEMO                           = "true"
     OURO_CSV                       = "/home/site/wwwroot/data/ouro/fato_permanencia.csv"
