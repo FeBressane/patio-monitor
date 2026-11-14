@@ -45,7 +45,7 @@
     <div class="produto">PÁTIO MONITOR</div>
     <div class="slogan">Visão única do pátio para terminais e garagens de ônibus</div>
     <div class="entrega">Secure DevOps Tools &amp; Cloud Computing<br><b>Deploy Blindado do Pátio Monitor</b><br>
-      Professor: Gabriel Henrique Boyczuk Arcanjo<br>Turma: 4ESPV</div>
+      Professores: Gabriel Henrique Boyczuk Arcanjo e Cleórbete Santos<br>Turma: 4ESPV</div>
   </div>
   <div class="integrantes"><b>Integrantes</b><br>
     Camila do Prado Padalino · RM 98316<br>Felipe Cavalcante Bressane · RM 97688<br>Gabriel Teixeira Machado · RM 551570</div>
@@ -59,14 +59,16 @@
 <h2>1. Ficha Técnica do MVP</h2>
 <table>
   <tr><th style="width:28%">Campo</th><th>Pátio Monitor</th></tr>
+  <tr><td>Nome do produto</td><td>Pátio Monitor</td></tr>
   <tr><td>Cidadão e território</td><td>O passageiro que espera na plataforma e o controlador de terminais e garagens de ônibus em São Paulo. O Terminal Pirituba é o cenário de referência.</td></tr>
   <tr><td>Problema</td><td>Escala, portaria e rastreamento não concordam sobre onde está cada ônibus, e o controlador decide sem saber se o veículo está fora, manobrando ou foi trocado.</td></tr>
   <tr><td>Proposta de valor</td><td>Uma visão única do pátio que cruza o previsto com o registrado e aponta pendências enquanto ainda dá tempo de agir.</td></tr>
   <tr><td>Arquitetura</td><td>Front web, API FastAPI, pipeline de dados (Airflow → Databricks), assistente de IA com RAG, detector de visão, robô de conciliação (RPA) e Smart Bus Gate (ESP32) e automação RPA no n8n, publicados por CI/CD no Azure App Service.</td></tr>
   <tr><td>Fontes de dados</td><td>SPTrans Olho Vivo, GTFS da SPTrans, Open-Meteo e portaria simulada em CSV (regra de geração documentada).</td></tr>
+  <tr><td>Modelos de IA</td><td>Assistente do controlador com LLM e RAG, YOLO para veículos no pátio e o modelo de Machine Learning do Smart Bus Gate.</td></tr>
   <tr><td>Indicadores de impacto</td><td>Porcentagem de partidas no horário, tempo para localizar um veículo, saídas sem confirmação por dia e tempo médio de permanência.</td></tr>
   <tr><td>ODS</td><td>ODS 11 (meta 11.2) e ODS 9.</td></tr>
-  <tr><td>URL do MVP</td><td><a href="https://patio-monitor-gs-97688.azurewebsites.net">https://patio-monitor-gs-97688.azurewebsites.net</a> · Swagger em <a href="https://patio-monitor-gs-97688.azurewebsites.net/docs">/docs</a></td></tr>
+  <tr><td>URL do MVP e repositório</td><td><a href="https://patio-monitor-gs-97688.azurewebsites.net">https://patio-monitor-gs-97688.azurewebsites.net</a> · Swagger em <a href="https://patio-monitor-gs-97688.azurewebsites.net/docs">/docs</a> · repositório <a href="https://github.com/FeBressane/patio-monitor-devops">github.com/FeBressane/patio-monitor-devops</a></td></tr>
 </table>
 <p>A mesma ficha abre o <a href="https://github.com/FeBressane/patio-monitor-devops#readme">README do repositório</a>.</p>
 

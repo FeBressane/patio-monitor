@@ -40,5 +40,24 @@ $("veiculos").addEventListener("click", async (e) => {
   }
 });
 
+// Camada Ouro (Big Data): export da fato_permanencia servido pela API. Muda só quando há novo export, então lê 1x.
+async function carregarOuro() {
+  const hora = (v) => (v ? new Date(v).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "–");
+  try {
+    const r = await api("/permanencia?limite=20");
+    const linhas = r.linhas || [];
+    $("ouro-info").textContent = linhas.length
+      ? `${linhas.length} viagens mais recentes · fonte: ${r.fonte || "fato_permanencia.csv"}`
+      : "Aguardando o export da camada Ouro (data/ouro/fato_permanencia.csv).";
+    $("ouro").innerHTML = linhas.map((l) => `<tr class="${l.status_conciliacao && l.status_conciliacao !== "ok" ? "alerta" : ""}">
+      <td>${esc(l.viagem_id)}</td><td>${esc(l.linha)}</td><td>${esc(l.prefixo_veiculo || l.prefixo_previsto)}</td>
+      <td>${hora(l.entrada)}</td><td>${hora(l.saida)}</td><td>${esc(l.minutos_parado ?? "–")}</td>
+      <td>${esc(l.status_conciliacao || "–")}</td></tr>`).join("");
+  } catch (e) {
+    $("ouro-info").textContent = "Camada Ouro indisponível (" + e.message + ").";
+  }
+}
+
 atualizar();
+carregarOuro();
 setInterval(atualizar, 3000);

@@ -29,6 +29,7 @@ Este repositório é o **núcleo do produto**: a API que recebe e serve os dados
 
 | Campo | Pátio Monitor |
 |---|---|
+| Nome do produto | Pátio Monitor |
 | Cidadão e território | O passageiro que espera na plataforma e o controlador de terminais e garagens de ônibus em São Paulo. O Terminal Pirituba é o cenário de referência. |
 | Problema | Escala, portaria e rastreamento não concordam sobre onde está cada ônibus, e o controlador decide sem saber se o veículo está fora, manobrando ou foi trocado. |
 | Proposta de valor | Uma visão única do pátio que cruza o previsto com o registrado e aponta pendências enquanto ainda dá tempo de agir. |
@@ -36,6 +37,7 @@ Este repositório é o **núcleo do produto**: a API que recebe e serve os dados
 | Fontes de dados | SPTrans Olho Vivo (posições reais), GTFS da SPTrans (viagens previstas), Open-Meteo (clima) e portaria simulada em CSV, com a regra de geração documentada. |
 | Modelos de IA | Assistente do controlador com LLM e RAG, YOLO para veículos no pátio e o modelo de Machine Learning do Smart Bus Gate. |
 | Indicadores de impacto | Porcentagem de partidas no horário, tempo para localizar um veículo, saídas sem confirmação por dia e tempo médio de permanência. |
+| URL do MVP e repositório | https://patio-monitor-gs-97688.azurewebsites.net · https://github.com/FeBressane/patio-monitor-devops |
 | ODS | ODS 11 (meta 11.2, transporte público acessível e eficiente) e ODS 9 (infraestrutura e inovação). |
 | IA responsável | O assistente e a visão apenas sugerem. A decisão é sempre do controlador. |
 
